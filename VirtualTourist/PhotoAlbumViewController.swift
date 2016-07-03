@@ -21,8 +21,8 @@ class PhotoAlbumViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         //Center pin
-        let latDelta: CLLocationDegrees = 0.01
-        let longDelta: CLLocationDegrees = 0.01
+        let latDelta: CLLocationDegrees = 0.1
+        let longDelta: CLLocationDegrees = 0.1
         let theSpan: MKCoordinateSpan = MKCoordinateSpanMake(latDelta, longDelta)
 
         let region: MKCoordinateRegion = MKCoordinateRegionMake(coordinate!, theSpan)

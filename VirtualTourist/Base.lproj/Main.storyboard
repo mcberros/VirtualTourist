@@ -83,43 +83,44 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="I66-N2-Qhz">
-                                <rect key="frame" x="0.0" y="64" width="600" height="131"/>
-                            </mapView>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Hon-x3-YWs">
-                                <rect key="frame" x="0.0" y="194" width="600" height="406"/>
-                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="bDB-Nw-Z35">
-                                    <size key="itemSize" width="50" height="50"/>
-                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
-                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                </collectionViewFlowLayout>
-                                <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="nqn-7p-zi5">
-                                        <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                        </view>
-                                    </collectionViewCell>
-                                </cells>
-                            </collectionView>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="tLt-cR-1IJ">
+                                <rect key="frame" x="0.0" y="64" width="600" height="537"/>
+                                <subviews>
+                                    <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="I66-N2-Qhz">
+                                        <rect key="frame" x="0.0" y="0.0" width="600" height="131"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="131" id="dd5-Zf-6ZQ"/>
+                                        </constraints>
+                                    </mapView>
+                                    <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Hon-x3-YWs">
+                                        <rect key="frame" x="0.0" y="131" width="600" height="406"/>
+                                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="bDB-Nw-Z35">
+                                            <size key="itemSize" width="50" height="50"/>
+                                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                        </collectionViewFlowLayout>
+                                        <cells>
+                                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="nqn-7p-zi5">
+                                                <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                                    <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                </view>
+                                            </collectionViewCell>
+                                        </cells>
+                                    </collectionView>
+                                </subviews>
+                            </stackView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="Hon-x3-YWs" firstAttribute="top" secondItem="RBu-jK-7Pb" secondAttribute="bottom" constant="130" id="5Aw-nu-AHe"/>
-                            <constraint firstItem="I66-N2-Qhz" firstAttribute="top" secondItem="RBu-jK-7Pb" secondAttribute="bottom" id="9eZ-gj-yIu"/>
-                            <constraint firstItem="I66-N2-Qhz" firstAttribute="top" secondItem="RBu-jK-7Pb" secondAttribute="bottom" id="FF5-aq-cKH"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="I66-N2-Qhz" secondAttribute="trailing" constant="-20" id="JS3-Rh-ZzT"/>
-                            <constraint firstItem="I66-N2-Qhz" firstAttribute="leading" secondItem="m6D-yC-Fnb" secondAttribute="leadingMargin" constant="-20" id="QFo-2v-6Z6"/>
-                            <constraint firstItem="D12-zF-aGc" firstAttribute="top" secondItem="I66-N2-Qhz" secondAttribute="bottom" constant="405" id="VBR-CM-NHS"/>
-                            <constraint firstItem="D12-zF-aGc" firstAttribute="top" secondItem="Hon-x3-YWs" secondAttribute="bottom" id="ZSp-DB-3vx"/>
-                            <constraint firstItem="I66-N2-Qhz" firstAttribute="leading" secondItem="m6D-yC-Fnb" secondAttribute="leadingMargin" constant="-20" id="ls5-04-FQq"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="I66-N2-Qhz" secondAttribute="trailing" constant="-20" id="psb-Zj-fAU"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="Hon-x3-YWs" secondAttribute="trailing" constant="-20" id="t8M-Ot-BFp"/>
-                            <constraint firstItem="Hon-x3-YWs" firstAttribute="leading" secondItem="m6D-yC-Fnb" secondAttribute="leadingMargin" constant="-20" id="z3f-mn-Okd"/>
+                            <constraint firstAttribute="bottomMargin" secondItem="tLt-cR-1IJ" secondAttribute="bottom" constant="-1" id="9ao-Wh-sww"/>
+                            <constraint firstItem="tLt-cR-1IJ" firstAttribute="leading" secondItem="m6D-yC-Fnb" secondAttribute="leading" id="HTM-8M-G1s"/>
+                            <constraint firstAttribute="trailing" secondItem="tLt-cR-1IJ" secondAttribute="trailing" id="JUv-cF-93s"/>
+                            <constraint firstItem="tLt-cR-1IJ" firstAttribute="top" secondItem="RBu-jK-7Pb" secondAttribute="bottom" id="crC-pR-Qgb"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="c8N-7N-0ty">
