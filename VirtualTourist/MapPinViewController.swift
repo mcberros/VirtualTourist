@@ -51,6 +51,9 @@ extension MapPinViewController: MKMapViewDelegate {
     func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView) {
         let photoAlbumViewController = self.storyboard?.instantiateViewControllerWithIdentifier("PhotoAlbumID") as! PhotoAlbumViewController
 
+//        photoAlbumViewController.latitude = view.annotation?.coordinate.latitude
+//        photoAlbumViewController.longitude = view.annotation?.coordinate.longitude
+        photoAlbumViewController.coordinate = view.annotation?.coordinate
         self.navigationController?.pushViewController(photoAlbumViewController, animated: true)
     }
 }
