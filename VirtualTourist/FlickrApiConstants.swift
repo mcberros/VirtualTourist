@@ -11,21 +11,22 @@ import Foundation
 extension FlickrApiClient {
 
     struct Constants {
-        static let BaseParseURL = "https://api.parse.com/"
-        static let ParseApplicationID = "QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr"
-        static let RestApiKey = "QuWThTdiRmTux3YaDseUSEpUKo7aBYM737yKd4gY"
+        static let BaseURL = "https://api.flickr.com/services/rest/"
+        static let ApiKey = "b78bc85713989c71fce367ce67a46843"
     }
 
     struct Methods {
-        static let GetStudentLocationsMethod = "1/classes/StudentLocation"
-    }
-
-    struct ParameterKeys {
-        static let Limit = "limit"
-        static let Order = "order"
+        static let SearchPhotos = "flickr.photos.search"
     }
 
     struct ParameterValues {
-        static let AscendingUpdatedAt = "-updatedAt"
+        static let SafeSearch = "1"
+        static let Extras = "url_m"
+        static let Format = "json"
+        static let NoJsonCallback = "1"
+        static let PerPage = "10"
     }
 }
+
+
+
