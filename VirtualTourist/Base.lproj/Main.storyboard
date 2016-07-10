@@ -101,16 +101,28 @@
                                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                         </collectionViewFlowLayout>
                                         <cells>
-                                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="nqn-7p-zi5">
+                                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="cell" id="nqn-7p-zi5" customClass="PhotoCollectionViewCell" customModule="VirtualTourist" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                                     <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                                     <autoresizingMask key="autoresizingMask"/>
+                                                    <subviews>
+                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fdd-sP-ogv">
+                                                            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                                        </imageView>
+                                                    </subviews>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                 </view>
+                                                <connections>
+                                                    <outlet property="photoCellImageView" destination="fdd-sP-ogv" id="CB4-xq-T4Q"/>
+                                                </connections>
                                             </collectionViewCell>
                                         </cells>
+                                        <connections>
+                                            <outlet property="dataSource" destination="fmg-Yl-h0w" id="c15-ww-Ier"/>
+                                            <outlet property="delegate" destination="fmg-Yl-h0w" id="a0E-cg-gCp"/>
+                                        </connections>
                                     </collectionView>
                                 </subviews>
                             </stackView>
