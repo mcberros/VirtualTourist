@@ -10,34 +10,6 @@ import Foundation
 import UIKit
 
 extension FlickrApiClient {
-//    func getPhotos(user: String, password: String, completionHandler: (success: Bool, errorString: String?) -> Void) {
-//        
-//        let urlString = UdacityApiClient.Constants.BaseUdacityURL + UdacityApiClient.Methods.SessionMethod
-//
-//        let jsonBody: [String: AnyObject] = [
-//            "udacity": ["username": user, "password": password]]
-//
-//        taskForPOSTMethod(urlString, jsonBody: jsonBody) {(success, result, errorString) in
-//            if success {
-//                if let userID = result["account"]!!["key"] as? String {
-//                    self.userID = userID
-//                    print(self.userID)
-//                    self.getDataAuthUser(){(sucsess, errorString) in
-//                        if success {
-//                            completionHandler(success: true, errorString: errorString)
-//                        } else {
-//                            completionHandler(success: false, errorString: errorString)
-//                        }
-//                    }
-//                } else {
-//                    completionHandler(success: false, errorString: "No userID")
-//                }
-//            } else {
-//                completionHandler(success: false, errorString: errorString)
-//            }
-//        }
-//    }
-
     func getImageFromFlickrBySearch(boundingBoxString: String, completionHandler: (success: Bool, errorString: String?) -> Void) {
 
         let session = NSURLSession.sharedSession()
@@ -111,11 +83,6 @@ extension FlickrApiClient {
                 return
             }
 
-            //            guard let perPage = (photosDictionary["perpage"] as? NSString)?.integerValue else {
-            //                print("Cannot find key 'perpage' in \(photosDictionary)")
-            //                return
-            //            }
-
             if totalPhotos > 0 {
 
                 /* GUARD: Is the "photo" key in photosDictionary? */
@@ -124,31 +91,23 @@ extension FlickrApiClient {
                     return
                 }
 
+                for(photoDictionary) in photosArray {
+                    /* GUARD: Does our photo have a key for 'url_m'? */
+                    guard let imageUrlString = photoDictionary["url_m"] as? String else {
+                        print("Cannot find key 'url_m' in \(photoDictionary)")
+                        return
+                    }
 
-                let randomPhotoIndex = Int(arc4random_uniform(UInt32(photosArray.count)))
-                let photoDictionary = photosArray[randomPhotoIndex] as [String: AnyObject]
+                    let imageURL = NSURL(string: imageUrlString)
 
-                /* GUARD: Does our photo have a key for 'url_m'? */
-                guard let imageUrlString = photoDictionary["url_m"] as? String else {
-                    print("Cannot find key 'url_m' in \(photoDictionary)")
-                    return
+                    if let imageData = NSData(contentsOfURL: imageURL!) {
+                        completionHandler(success: true, errorString: "")
+                        Pictures.sharedInstance().pictures.append(UIImage(data: imageData)!)
+
+                    } else {
+                        print("Image does not exist at \(imageURL)")
+                    }
                 }
-
-                let imageURL = NSURL(string: imageUrlString)
-
-                if let imageData = NSData(contentsOfURL: imageURL!) {
-                    completionHandler(success: true, errorString: "")
-                    Pictures.sharedInstance().pictures.append(UIImage(data: imageData)!)
-
-                } else {
-                    print("Image does not exist at \(imageURL)")
-                }
-            } else {
-                //                dispatch_async(dispatch_get_main_queue(), {
-                //                    self.photoTitleLabel.text = "No Photos Found. Search Again."
-                //                    self.defaultLabel.alpha = 1.0
-                //                    self.photoImageView.image = nil
-                //                })
             }
         }
 

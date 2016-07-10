@@ -22,9 +22,8 @@ class PhotoAlbumViewController: UIViewController {
     @IBOutlet weak var pinMapView: MKMapView!
     @IBOutlet weak var photoAlbumCollectionView: UICollectionView!
 
-//    var latitude: Double?
-//    var longitude: Double?
-    var coordinate: CLLocationCoordinate2D?
+    var latitude: Double?
+    var longitude: Double?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,11 +32,12 @@ class PhotoAlbumViewController: UIViewController {
         let longDelta: CLLocationDegrees = 0.1
         let theSpan: MKCoordinateSpan = MKCoordinateSpanMake(latDelta, longDelta)
 
-        let region: MKCoordinateRegion = MKCoordinateRegionMake(coordinate!, theSpan)
+        let coordinate = CLLocationCoordinate2D(latitude: latitude!, longitude: longitude!)
+        let region: MKCoordinateRegion = MKCoordinateRegionMake(coordinate, theSpan)
         pinMapView?.setRegion(region, animated: true)
 
         let pointAnnotation:MKPointAnnotation = MKPointAnnotation()
-        pointAnnotation.coordinate = coordinate!
+        pointAnnotation.coordinate = coordinate
         pinMapView?.addAnnotation(pointAnnotation)
 
         //Show photoAlbum
@@ -59,10 +59,6 @@ class PhotoAlbumViewController: UIViewController {
     }
 
     func createBoundingBoxString() -> String {
-
-        let latitude = coordinate?.latitude
-        let longitude = coordinate?.longitude
-
         /* Fix added to ensure box is bounded by minimum and maximums */
         let bottom_left_lon = max(longitude! - BOUNDING_BOX_HALF_WIDTH, LON_MIN)
         let bottom_left_lat = max(latitude! - BOUNDING_BOX_HALF_HEIGHT, LAT_MIN)
