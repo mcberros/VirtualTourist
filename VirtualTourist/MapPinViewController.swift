@@ -8,9 +8,10 @@
 
 import UIKit
 import MapKit
+import CoreData
 
-class MapPinViewController: UIViewController {
-    var annotations: [MKPointAnnotation]?
+class MapPinViewController: UIViewController, NSFetchedResultsControllerDelegate {
+//    var annotations: [MKPointAnnotation]?
     var coordinate: CLLocationCoordinate2D?
     var latitude: Double?
     var longitude: Double?
@@ -20,15 +21,43 @@ class MapPinViewController: UIViewController {
 
     @IBOutlet weak var mapView: MKMapView!
 
+    var appDelegate: AppDelegate!
+    var stack: CoreDataStack!
+
+    var fetchedResultsController : NSFetchedResultsController?{
+        didSet{
+            // Whenever the frc changes, we execute the search and
+            // reload the table
+            fetchedResultsController?.delegate = self
+            executeSearch()
+//            tableView.reloadData()
+        }
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        annotations = [MKPointAnnotation]()
+//        annotations = [MKPointAnnotation]()
         //Add GestureRecognizer to Drop a pin
         longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: "addAnnotation:")
         longPressGestureRecognizer!.minimumPressDuration = 1.0
         mapView.addGestureRecognizer(longPressGestureRecognizer!)
         mapView.delegate = self
+
+        appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        stack = appDelegate.stack
+
         //Get Pins from DB
+        let fr = NSFetchRequest(entityName: "Pin")
+
+        fr.sortDescriptors = [NSSortDescriptor(key: "latitude", ascending: true)]
+        fetchedResultsController = NSFetchedResultsController(fetchRequest: fr,
+            managedObjectContext: stack.context, sectionNameKeyPath: nil, cacheName: nil)
+
+        if let fetched = self.fetchedResultsController!.fetchedObjects as? [Pin] {
+            for annotation in fetched {
+                self.mapView.addAnnotation(annotation)
+            }
+        }
     }
 }
 
@@ -53,20 +82,28 @@ extension MapPinViewController: MKMapViewDelegate {
 
         photoAlbumViewController.latitude = view.annotation?.coordinate.latitude
         photoAlbumViewController.longitude = view.annotation?.coordinate.longitude
-//        photoAlbumViewController.coordinate = view.annotation?.coordinate
         self.navigationController?.pushViewController(photoAlbumViewController, animated: true)
     }
 }
 
 extension MapPinViewController {
+    func executeSearch(){
+        if let fc = fetchedResultsController{
+            do{
+                try fc.performFetch()
+            }catch let e as NSError{
+                print("Error while trying to perform a search: \n\(e)\n\(fetchedResultsController)")
+            }
+        }
+    }
+
     func addAnnotation(recognizer: UIGestureRecognizer) {
         let touchPoint = recognizer.locationInView(mapView)
         let newCoordinates = mapView.convertPoint(touchPoint, toCoordinateFromView: mapView)
-        let annotation = MKPointAnnotation()
-        annotation.coordinate = newCoordinates
-        mapView.addAnnotation(annotation)
-        //Persist pin
-        annotations!.append(annotation)
+
+        let pin = Pin(latitude: newCoordinates.latitude, longitude: newCoordinates.longitude, context: stack.context)
+        stack.save()
+        self.mapView.addAnnotation(pin)
     }
 }
 
