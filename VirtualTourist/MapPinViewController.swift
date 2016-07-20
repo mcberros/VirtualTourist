@@ -11,13 +11,7 @@ import MapKit
 import CoreData
 
 class MapPinViewController: UIViewController, NSFetchedResultsControllerDelegate {
-//    var annotations: [MKPointAnnotation]?
-    var coordinate: CLLocationCoordinate2D?
-    var latitude: Double?
-    var longitude: Double?
-
     var longPressGestureRecognizer: UILongPressGestureRecognizer? = nil
-    var tapRecognizer: UITapGestureRecognizer? = nil
 
     @IBOutlet weak var mapView: MKMapView!
 
@@ -26,38 +20,18 @@ class MapPinViewController: UIViewController, NSFetchedResultsControllerDelegate
 
     var fetchedResultsController : NSFetchedResultsController?{
         didSet{
-            // Whenever the frc changes, we execute the search and
-            // reload the table
+            // Whenever the frc changes, we execute the search
             fetchedResultsController?.delegate = self
             executeSearch()
-//            tableView.reloadData()
         }
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-//        annotations = [MKPointAnnotation]()
-        //Add GestureRecognizer to Drop a pin
-        longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: "addAnnotation:")
-        longPressGestureRecognizer!.minimumPressDuration = 1.0
-        mapView.addGestureRecognizer(longPressGestureRecognizer!)
-        mapView.delegate = self
 
-        appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-        stack = appDelegate.stack
-
-        //Get Pins from DB
-        let fr = NSFetchRequest(entityName: "Pin")
-
-        fr.sortDescriptors = [NSSortDescriptor(key: "latitude", ascending: true)]
-        fetchedResultsController = NSFetchedResultsController(fetchRequest: fr,
-            managedObjectContext: stack.context, sectionNameKeyPath: nil, cacheName: nil)
-
-        if let fetched = self.fetchedResultsController!.fetchedObjects as? [Pin] {
-            for annotation in fetched {
-                self.mapView.addAnnotation(annotation)
-            }
-        }
+        addGestureRecognizer()
+        initVars()
+        fetchPinsAndLoadMap()
     }
 }
 
@@ -87,6 +61,19 @@ extension MapPinViewController: MKMapViewDelegate {
 }
 
 extension MapPinViewController {
+    func addAnnotation(recognizer: UIGestureRecognizer) {
+        let touchPoint = recognizer.locationInView(mapView)
+        let newCoordinates = mapView.convertPoint(touchPoint, toCoordinateFromView: mapView)
+
+        let pin = Pin(latitude: newCoordinates.latitude, longitude: newCoordinates.longitude, context: stack.context)
+        stack.save()
+        dispatch_async(dispatch_get_main_queue()) {
+            self.mapView.addAnnotation(pin)
+        }
+    }
+}
+
+extension MapPinViewController {
     func executeSearch(){
         if let fc = fetchedResultsController{
             do{
@@ -96,14 +83,36 @@ extension MapPinViewController {
             }
         }
     }
+}
 
-    func addAnnotation(recognizer: UIGestureRecognizer) {
-        let touchPoint = recognizer.locationInView(mapView)
-        let newCoordinates = mapView.convertPoint(touchPoint, toCoordinateFromView: mapView)
+extension MapPinViewController {
+    func initVars(){
+        mapView.delegate = self
+        appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        stack = appDelegate.stack
+    }
 
-        let pin = Pin(latitude: newCoordinates.latitude, longitude: newCoordinates.longitude, context: stack.context)
-        stack.save()
-        self.mapView.addAnnotation(pin)
+    func addGestureRecognizer(){
+        longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: "addAnnotation:")
+        longPressGestureRecognizer!.minimumPressDuration = 1.0
+        mapView.addGestureRecognizer(longPressGestureRecognizer!)
+    }
+
+    func fetchPinsAndLoadMap(){
+        let fr = NSFetchRequest(entityName: "Pin")
+
+        fr.sortDescriptors = [NSSortDescriptor(key: "latitude", ascending: true)]
+
+        fetchedResultsController = NSFetchedResultsController(fetchRequest: fr,
+            managedObjectContext: stack.context, sectionNameKeyPath: nil, cacheName: nil)
+
+        if let fetched = self.fetchedResultsController!.fetchedObjects as? [Pin] {
+            for pin in fetched {
+                dispatch_async(dispatch_get_main_queue()) {
+                    self.mapView.addAnnotation(pin)
+                }
+            }
+        }
     }
 }
 

@@ -10,7 +10,6 @@ import Foundation
 import CoreData
 import MapKit
 
-
 class Pin: NSManagedObject, MKAnnotation {
     convenience init(latitude: Double, longitude: Double, context: NSManagedObjectContext) {
         if let ent = NSEntityDescription.entityForName("Pin", inManagedObjectContext: context) {
