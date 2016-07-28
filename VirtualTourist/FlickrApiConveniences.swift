@@ -102,7 +102,7 @@ extension FlickrApiClient {
 
                     if let imageData = NSData(contentsOfURL: imageURL!) {
                         completionHandler(success: true, errorString: "")
-                        Pictures.sharedInstance().pictures.append(UIImage(data: imageData)!)
+                        Photos.sharedInstance().photos.append(UIImage(data: imageData)!)
 
                     } else {
                         print("Image does not exist at \(imageURL)")

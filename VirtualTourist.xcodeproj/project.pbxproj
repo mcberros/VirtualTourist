@@ -21,7 +21,7 @@
 		6A9490111D1FF3CA00C45A77 /* VirtualTouristUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A9490101D1FF3CA00C45A77 /* VirtualTouristUITests.swift */; };
 		6A9490201D1FF45D00C45A77 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 6A94901E1D1FF45D00C45A77 /* Model.xcdatamodeld */; };
 		6AE360F21D32AD1A0053C99B /* FlickrApiConveniences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AE360F11D32AD1A0053C99B /* FlickrApiConveniences.swift */; };
-		6AE360F51D32B1B00053C99B /* Pictures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AE360F41D32B1B00053C99B /* Pictures.swift */; };
+		6AE360F51D32B1B00053C99B /* Photos.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AE360F41D32B1B00053C99B /* Photos.swift */; };
 		6AE360F81D32C0840053C99B /* Pin+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AE360F61D32C0840053C99B /* Pin+CoreDataProperties.swift */; };
 		6AE360F91D32C0840053C99B /* Pin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AE360F71D32C0840053C99B /* Pin.swift */; };
 /* End PBXBuildFile section */
@@ -64,7 +64,7 @@
 		6A9490121D1FF3CA00C45A77 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6A94901F1D1FF45D00C45A77 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
 		6AE360F11D32AD1A0053C99B /* FlickrApiConveniences.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlickrApiConveniences.swift; sourceTree = "<group>"; };
-		6AE360F41D32B1B00053C99B /* Pictures.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Pictures.swift; sourceTree = "<group>"; };
+		6AE360F41D32B1B00053C99B /* Photos.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Photos.swift; sourceTree = "<group>"; };
 		6AE360F61D32C0840053C99B /* Pin+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Pin+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		6AE360F71D32C0840053C99B /* Pin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Pin.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -174,7 +174,7 @@
 				6A94901E1D1FF45D00C45A77 /* Model.xcdatamodeld */,
 				6AE360F61D32C0840053C99B /* Pin+CoreDataProperties.swift */,
 				6AE360F71D32C0840053C99B /* Pin.swift */,
-				6AE360F41D32B1B00053C99B /* Pictures.swift */,
+				6AE360F41D32B1B00053C99B /* Photos.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -310,7 +310,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6AE360F51D32B1B00053C99B /* Pictures.swift in Sources */,
+				6AE360F51D32B1B00053C99B /* Photos.swift in Sources */,
 				6AE360F91D32C0840053C99B /* Pin.swift in Sources */,
 				6A2B2F5A1D293DEC006F0A41 /* FlickrApiClient.swift in Sources */,
 				6A3C693A1D3EB42A007CC592 /* CoreDataStack.swift in Sources */,

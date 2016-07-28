@@ -88,12 +88,12 @@ extension PhotoAlbumViewController: MKMapViewDelegate {
 
 extension PhotoAlbumViewController : UICollectionViewDataSource, UICollectionViewDelegate {
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return Pictures.sharedInstance().pictures.count
+        return Photos.sharedInstance().photos.count
     }
 
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier(reuseIdentifier, forIndexPath: indexPath) as! PhotoCollectionViewCell
-        cell.photoCellImageView.image = Pictures.sharedInstance().pictures[indexPath.item]
+        cell.photoCellImageView.image = Photos.sharedInstance().photos[indexPath.item]
         cell.backgroundColor = UIColor.blackColor()
         // Configure the cell
         return cell
