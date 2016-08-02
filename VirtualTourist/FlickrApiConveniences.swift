@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 extension FlickrApiClient {
-    func getImageFromFlickrBySearch(boundingBoxString: String, completionHandler: (success: Bool, errorString: String?) -> Void) {
+    func getImageFromFlickrBySearch(boundingBoxString: String, completionHandler: (success: Bool, photosArray: [[String: AnyObject]],errorString: String?) -> Void) {
 
         let session = NSURLSession.sharedSession()
 
@@ -91,23 +91,7 @@ extension FlickrApiClient {
                     return
                 }
 
-                for(photoDictionary) in photosArray {
-                    /* GUARD: Does our photo have a key for 'url_m'? */
-                    guard let imageUrlString = photoDictionary["url_m"] as? String else {
-                        print("Cannot find key 'url_m' in \(photoDictionary)")
-                        return
-                    }
-
-                    let imageURL = NSURL(string: imageUrlString)
-
-                    if let imageData = NSData(contentsOfURL: imageURL!) {
-                        completionHandler(success: true, errorString: "")
-                        Photos.sharedInstance().photos.append(UIImage(data: imageData)!)
-
-                    } else {
-                        print("Image does not exist at \(imageURL)")
-                    }
-                }
+                completionHandler(success: true, photosArray: photosArray, errorString: "")
             }
         }
 

@@ -8,8 +8,9 @@
 
 import Foundation
 import MapKit
+import CoreData
 
-class PhotoAlbumViewController: UIViewController {
+class PhotoAlbumViewController: UIViewController, NSFetchedResultsControllerDelegate {
     let BOUNDING_BOX_HALF_WIDTH = 1.0
     let BOUNDING_BOX_HALF_HEIGHT = 1.0
     let LAT_MIN = -90.0
@@ -24,38 +25,90 @@ class PhotoAlbumViewController: UIViewController {
 
     var latitude: Double?
     var longitude: Double?
+    var pin: Pin?
+
+    var appDelegate: AppDelegate!
+    var stack: CoreDataStack!
+
+    var fetchedResultsController : NSFetchedResultsController?{
+        didSet{
+            // Whenever the frc changes, we execute the search
+            fetchedResultsController?.delegate = self
+            executeSearch()
+        }
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        stack = appDelegate.stack
+
+        //
+
+        let fr = NSFetchRequest(entityName: "Photo")
+
+        fr.sortDescriptors = [NSSortDescriptor(key: "pin", ascending: true)]
+
+        let pred = NSPredicate(format: "pin = %@", pin!)
+
+        fr.predicate = pred
+
+        fetchedResultsController = NSFetchedResultsController(fetchRequest: fr,
+            managedObjectContext: stack.context, sectionNameKeyPath: nil, cacheName: nil)
+
+        fetchedResultsController?.delegate = self
+
+        let photos = fetchedResultsController!.fetchedObjects! as? [Photo]
+
         //Center pin
         let latDelta: CLLocationDegrees = 0.1
         let longDelta: CLLocationDegrees = 0.1
         let theSpan: MKCoordinateSpan = MKCoordinateSpanMake(latDelta, longDelta)
 
-        let coordinate = CLLocationCoordinate2D(latitude: latitude!, longitude: longitude!)
-        let region: MKCoordinateRegion = MKCoordinateRegionMake(coordinate, theSpan)
+        latitude = pin?.latitude as? Double
+        longitude = pin?.longitude as? Double
+
+        let coordinate = pin?.coordinate
+        let region: MKCoordinateRegion = MKCoordinateRegionMake(coordinate!, theSpan)
         pinMapView?.setRegion(region, animated: true)
 
         let pointAnnotation:MKPointAnnotation = MKPointAnnotation()
-        pointAnnotation.coordinate = coordinate
+        pointAnnotation.coordinate = coordinate!
         pinMapView?.addAnnotation(pointAnnotation)
 
         //Show photoAlbum
         photoAlbumCollectionView.dataSource = self
         photoAlbumCollectionView.delegate = self
         //If there are no photos for pin connect Flickr
-        FlickrApiClient.sharedInstance().getImageFromFlickrBySearch(createBoundingBoxString()){(success, errorString) in
+
+        if photos!.count == 0 {
+        FlickrApiClient.sharedInstance().getImageFromFlickrBySearch(createBoundingBoxString()){(success, photosArray, errorString) in
                 if success {
+                    for(photoDictionary) in photosArray {
+                        /* GUARD: Does our photo have a key for 'url_m'? */
+                        guard let photoUrlString = photoDictionary["url_m"] as? String else {
+                            print("Cannot find key 'url_m' in \(photoDictionary)")
+                            return
+                        }
+    
+                        let photoURL = NSURL(string: photoUrlString)
+    
+                        if let photoData = NSData(contentsOfURL: photoURL!) {
+                            let photo = Photo(pin: self.pin!, imageData: photoData, context: self.stack.context)
+                            self.stack.save()
+                        } else {
+                            print("Image does not exist at \(photoURL)")
+                        }
+                    }
+
                     dispatch_async(dispatch_get_main_queue()) {
                         self.photoAlbumCollectionView.reloadData()
                     }
                 } else {
-    //                dispatch_async(dispatch_get_main_queue()){
-    //                    self.showAlert(errorString!)
-    //                }
+                    print(errorString)
                 }
             }
-        //If there are photos, get photos for this pin
+        }
     }
 
     func createBoundingBoxString() -> String {
@@ -66,6 +119,16 @@ class PhotoAlbumViewController: UIViewController {
         let top_right_lat = min(latitude! + BOUNDING_BOX_HALF_HEIGHT, LAT_MAX)
 
         return "\(bottom_left_lon),\(bottom_left_lat),\(top_right_lon),\(top_right_lat)"
+    }
+
+    func executeSearch(){
+        if let fc = fetchedResultsController{
+            do{
+                try fc.performFetch()
+            }catch let e as NSError{
+                print("Error while trying to perform a search: \n\(e)\n\(fetchedResultsController)")
+            }
+        }
     }
 }
 
@@ -88,14 +151,17 @@ extension PhotoAlbumViewController: MKMapViewDelegate {
 
 extension PhotoAlbumViewController : UICollectionViewDataSource, UICollectionViewDelegate {
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return Photos.sharedInstance().photos.count
+        return (pin!.photos?.count)!
     }
 
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier(reuseIdentifier, forIndexPath: indexPath) as! PhotoCollectionViewCell
-        cell.photoCellImageView.image = Photos.sharedInstance().photos[indexPath.item]
+
+        let photo = fetchedResultsController!.objectAtIndexPath(indexPath) as! Photo
+
+        cell.photoCellImageView.image = UIImage(data: photo.imageData!)
         cell.backgroundColor = UIColor.blackColor()
-        // Configure the cell
+
         return cell
     }
 }

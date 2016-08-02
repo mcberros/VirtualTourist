@@ -11,7 +11,13 @@ import CoreData
 
 
 class Photo: NSManagedObject {
-
-// Insert code here to add functionality to your managed object subclass
-
+    convenience init(pin: Pin, imageData: NSData, context: NSManagedObjectContext) {
+        if let ent = NSEntityDescription.entityForName("Photo", inManagedObjectContext: context) {
+            self.init(entity: ent, insertIntoManagedObjectContext: context)
+            self.imageData = imageData
+            self.pin = pin
+        } else {
+            fatalError("Unable to find Entity Photo")
+        }
+    }
 }

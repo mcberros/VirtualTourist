@@ -52,11 +52,31 @@ extension MapPinViewController: MKMapViewDelegate {
     }
 
     func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView) {
-        let photoAlbumViewController = self.storyboard?.instantiateViewControllerWithIdentifier("PhotoAlbumID") as! PhotoAlbumViewController
+        if let photoAlbumViewController = self.storyboard?.instantiateViewControllerWithIdentifier("PhotoAlbumID") as? PhotoAlbumViewController {
 
-        photoAlbumViewController.latitude = view.annotation?.coordinate.latitude
-        photoAlbumViewController.longitude = view.annotation?.coordinate.longitude
-        self.navigationController?.pushViewController(photoAlbumViewController, animated: true)
+//            let latitude = view.annotation?.coordinate.latitude
+//            let longitude = view.annotation?.coordinate.longitude
+//
+//            let fr = NSFetchRequest(entityName: "Photo")
+//
+//            fr.sortDescriptors = [NSSortDescriptor(key: "pin", ascending: true)]
+//
+//            let pin = view.annotation! as! Pin
+//            let pred = NSPredicate(format: "pin = %@", pin)
+//
+//            fr.predicate = pred
+//
+//            let fc = NSFetchedResultsController(fetchRequest: fr,
+//                managedObjectContext: stack.context, sectionNameKeyPath: nil, cacheName: nil)
+//
+//            photoAlbumViewController.pin = fc.fetchedObjects![0] as? Pin
+//
+//            photoAlbumViewController.fetchedResultsController = fc
+
+            photoAlbumViewController.pin = view.annotation! as? Pin
+
+            self.navigationController?.pushViewController(photoAlbumViewController, animated: true)
+        }
     }
 }
 
